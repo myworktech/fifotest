@@ -1,14 +1,16 @@
 package com.myworktech.fifotest;
 
-public class DefaultBlockingQueue implements BlockingQueue {
+public class TwoPointersDefaultBlockingQueue implements BlockingQueue {
 
     private final int maxQueueSize;
     private final Object[] bufferOfObjects;
 
     private int readPointer = 0;
+    private int writePointer = 0;
     private int elementsCount = 0;
 
-    public DefaultBlockingQueue(int maxQueueSize) {
+
+    public TwoPointersDefaultBlockingQueue(int maxQueueSize) {
         this.maxQueueSize = maxQueueSize;
         this.bufferOfObjects = new Object[maxQueueSize];
     }
@@ -21,10 +23,8 @@ public class DefaultBlockingQueue implements BlockingQueue {
         Object object = bufferOfObjects[readPointer];
         bufferOfObjects[readPointer] = null;
         elementsCount = elementsCount - 1;
+        readPointer = shiftPointer(readPointer);
 
-        readPointer = readPointer + 1;
-        if (readPointer == maxQueueSize)
-            readPointer = 0;
         return object;
     }
 
@@ -33,12 +33,13 @@ public class DefaultBlockingQueue implements BlockingQueue {
         if (elementsCount == maxQueueSize)
             throw new IllegalStateException();
 
-        int writePointer = readPointer + elementsCount;
-
-        if (writePointer >= maxQueueSize)
-            writePointer = 0;
         bufferOfObjects[writePointer] = object;
-
+        writePointer = shiftPointer(writePointer);
         elementsCount = elementsCount + 1;
+    }
+
+    private int shiftPointer(int pointer) {
+        pointer = pointer + 1;
+        return pointer == maxQueueSize ? 0 : pointer;
     }
 }
