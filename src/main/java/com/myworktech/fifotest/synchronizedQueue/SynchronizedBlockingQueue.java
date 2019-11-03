@@ -48,10 +48,6 @@ public class SynchronizedBlockingQueue {
             }
 
         synchronized (this) {
-
-            if (elementsCount == maxQueueSize)
-                throw new IllegalStateException();
-
             int writePointer = readPointer + elementsCount;
             if (writePointer >= maxQueueSize)
                 writePointer = 0;
