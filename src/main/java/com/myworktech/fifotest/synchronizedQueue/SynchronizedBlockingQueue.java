@@ -1,4 +1,4 @@
-package com.myworktech.fifotest.syncronized;
+package com.myworktech.fifotest.synchronizedQueue;
 
 public class SynchronizedBlockingQueue {
 
